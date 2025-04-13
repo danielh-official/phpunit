@@ -319,52 +319,54 @@ class TestSuite implements IteratorAggregate, Reorderable, Test
      */
     public function run(): void
     {
-        if ($this->wasRun) {
-            // @codeCoverageIgnoreStart
-            throw new Exception('The tests aggregated by this TestSuite were already run');
-            // @codeCoverageIgnoreEnd
-        }
+        for ($i = 0; $i < 5; $i++) {
+//            if ($this->wasRun) {
+//                // @codeCoverageIgnoreStart
+//                throw new Exception('The tests aggregated by this TestSuite were already run');
+//                // @codeCoverageIgnoreEnd
+//            }
 
-        $this->wasRun = true;
+            $this->wasRun = true;
 
-        if ($this->isEmpty()) {
-            return;
-        }
-
-        $emitter                       = Event\Facade::emitter();
-        $testSuiteValueObjectForEvents = Event\TestSuite\TestSuiteBuilder::from($this);
-
-        $emitter->testSuiteStarted($testSuiteValueObjectForEvents);
-
-        if (!$this->invokeMethodsBeforeFirstTest($emitter, $testSuiteValueObjectForEvents)) {
-            return;
-        }
-
-        /** @var list<Test> $tests */
-        $tests = [];
-
-        foreach ($this as $test) {
-            $tests[] = $test;
-        }
-
-        $tests = array_reverse($tests);
-
-        $this->tests  = [];
-        $this->groups = [];
-
-        while (($test = array_pop($tests)) !== null) {
-            if (TestResultFacade::shouldStop()) {
-                $emitter->testRunnerExecutionAborted();
-
-                break;
+            if ($this->isEmpty()) {
+                return;
             }
 
-            $test->run();
+            $emitter = Event\Facade::emitter();
+            $testSuiteValueObjectForEvents = Event\TestSuite\TestSuiteBuilder::from($this);
+
+            $emitter->testSuiteStarted($testSuiteValueObjectForEvents);
+
+            if (!$this->invokeMethodsBeforeFirstTest($emitter, $testSuiteValueObjectForEvents)) {
+                return;
+            }
+
+            /** @var list<Test> $tests */
+            $tests = [];
+
+            foreach ($this as $test) {
+                $tests[] = $test;
+            }
+
+            $tests = array_reverse($tests);
+
+            $this->tests = [];
+            $this->groups = [];
+
+            while (($test = array_pop($tests)) !== null) {
+                if (TestResultFacade::shouldStop()) {
+                    $emitter->testRunnerExecutionAborted();
+
+                    break;
+                }
+
+                $test->run();
+            }
+
+            $this->invokeMethodsAfterLastTest($emitter);
+
+            $emitter->testSuiteFinished($testSuiteValueObjectForEvents);
         }
-
-        $this->invokeMethodsAfterLastTest($emitter);
-
-        $emitter->testSuiteFinished($testSuiteValueObjectForEvents);
     }
 
     /**

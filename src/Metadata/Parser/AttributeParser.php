@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Metadata\Parser;
 
+use PHPUnit\Framework\Attributes\Repeat;
 use const JSON_THROW_ON_ERROR;
 use function assert;
 use function class_exists;
@@ -551,6 +552,11 @@ final readonly class AttributeParser implements Parser
                     $result[] = Metadata::dataProvider($className, $attributeInstance->methodName());
 
                     break;
+
+//                case Repeat::class:
+//                    assert($attributeInstance instanceof Repeat);
+//
+//                    $result[] = Metadata::repeat($className, );
 
                 case DataProviderExternal::class:
                     assert($attributeInstance instanceof DataProviderExternal);

@@ -144,6 +144,16 @@ abstract readonly class Metadata
     }
 
     /**
+     * @param string $className
+     * @param int $times
+     * @return Repeat
+     */
+    public static function repeat(string $className, int $times): Repeat
+    {
+        return new Repeat(self::METHOD_LEVEL, $className, $times);
+    }
+
+    /**
      * @param class-string $className
      */
     public static function dependsOnClass(string $className, bool $deepClone, bool $shallowClone): DependsOnClass

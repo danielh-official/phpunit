@@ -270,6 +270,8 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
 
     public function isDataProvider(): self
     {
+
+
         return new self(
             ...array_filter(
                 $this->metadata,

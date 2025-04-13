@@ -47,6 +47,9 @@ final readonly class TestBuilder
             $data = (new DataProvider)->providedData($className, $methodName);
         }
 
+//        if ($methodName === 'testRepeatsTest')
+//            var_dump($data);
+
         if ($data !== null) {
             return $this->buildDataProviderTestSuite(
                 $methodName,

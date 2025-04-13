@@ -45,6 +45,9 @@ final readonly class DataProvider
         $dataProvider = MetadataRegistry::parser()->forMethod($className, $methodName)->isDataProvider();
         $testWith     = MetadataRegistry::parser()->forMethod($className, $methodName)->isTestWith();
 
+        if ($methodName === 'testRepeatsTest')
+            var_dump($dataProvider);
+
         if ($dataProvider->isEmpty() && $testWith->isEmpty()) {
             return null;
         }
